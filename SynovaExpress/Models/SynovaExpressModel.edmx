@@ -1,0 +1,525 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="SynovaExpressDataModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="__RefactorLog">
+          <Key>
+            <PropertyRef Name="OperationKey" />
+          </Key>
+          <Property Name="OperationKey" Type="uniqueidentifier" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Customer">
+          <Key>
+            <PropertyRef Name="CustomerID" />
+          </Key>
+          <Property Name="CustomerID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" />
+          <Property Name="Address" Type="nvarchar" MaxLength="50" />
+          <Property Name="Tel" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="DistributeCenter">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="ShipmentID" Type="int" Nullable="false" />
+          <Property Name="UserID" Type="int" Nullable="false" />
+          <Property Name="DriverID" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Driver">
+          <Key>
+            <PropertyRef Name="DriverId" />
+          </Key>
+          <Property Name="DriverId" Type="int" Nullable="false" />
+          <Property Name="name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="telephone" Type="nchar" MaxLength="10" Nullable="false" />
+          <Property Name="RouteID" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="car_id" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Route">
+          <Key>
+            <PropertyRef Name="name" />
+          </Key>
+          <Property Name="name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="area" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Shipment">
+          <Key>
+            <PropertyRef Name="ShipmentNo" />
+          </Key>
+          <Property Name="ShipmentNo" Type="int" Nullable="false" />
+          <Property Name="CustomerID" Type="int" Nullable="false" />
+          <Property Name="receiver_name" Type="nvarchar" MaxLength="50" />
+          <Property Name="receiver_address" Type="nvarchar" MaxLength="50" />
+          <Property Name="receiver_zipcode" Type="int" Nullable="false" />
+          <Property Name="receiver_tel" Type="int" Nullable="false" />
+          <Property Name="quantity" Type="int" Nullable="false" />
+          <Property Name="price" Type="decimal" Precision="9" Scale="2" />
+          <Property Name="shipment_date" Type="date" />
+          <Property Name="booking_date" Type="date" />
+          <Property Name="weight" Type="int" />
+        </EntityType>
+        <EntityType Name="Status">
+          <Key>
+            <PropertyRef Name="StatusId" />
+          </Key>
+          <Property Name="StatusId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="status_name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="ShipmentID" Type="int" Nullable="false" />
+          <Property Name="time" Type="time" Precision="7" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="username" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="password" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="name" Type="nvarchar" MaxLength="50" />
+          <Property Name="tel" Type="int" />
+        </EntityType>
+        <Association Name="FK_dbo_DistributeCenter_dbo_Driver_DriverID">
+          <End Role="Driver" Type="Self.Driver" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="DistributeCenter" Type="Self.DistributeCenter" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Driver">
+              <PropertyRef Name="DriverId" />
+            </Principal>
+            <Dependent Role="DistributeCenter">
+              <PropertyRef Name="DriverID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_DistributeCenter_dbo_Shipment_ShipmentNo">
+          <End Role="Shipment" Type="Self.Shipment" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="DistributeCenter" Type="Self.DistributeCenter" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Shipment">
+              <PropertyRef Name="ShipmentNo" />
+            </Principal>
+            <Dependent Role="DistributeCenter">
+              <PropertyRef Name="ShipmentID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_DistributeCenter_dbo_User_UserID">
+          <End Role="User" Type="Self.User" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="DistributeCenter" Type="Self.DistributeCenter" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="DistributeCenter">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_Driver_dbo_Route_RouteID">
+          <End Role="Route" Type="Self.Route" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Driver" Type="Self.Driver" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Route">
+              <PropertyRef Name="name" />
+            </Principal>
+            <Dependent Role="Driver">
+              <PropertyRef Name="RouteID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_Shipment_dbo_Customer_CustomerID">
+          <End Role="Customer" Type="Self.Customer" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Shipment" Type="Self.Shipment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Customer">
+              <PropertyRef Name="CustomerID" />
+            </Principal>
+            <Dependent Role="Shipment">
+              <PropertyRef Name="CustomerID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_Status_dbo_Shipment_ShipmentNo">
+          <End Role="Shipment" Type="Self.Shipment" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Status" Type="Self.Status" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Shipment">
+              <PropertyRef Name="ShipmentNo" />
+            </Principal>
+            <Dependent Role="Status">
+              <PropertyRef Name="ShipmentID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="SynovaExpressDataModelStoreContainer">
+          <EntitySet Name="__RefactorLog" EntityType="Self.__RefactorLog" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Customer" EntityType="Self.Customer" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DistributeCenter" EntityType="Self.DistributeCenter" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Driver" EntityType="Self.Driver" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Route" EntityType="Self.Route" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Shipment" EntityType="Self.Shipment" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Status" EntityType="Self.Status" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_dbo_DistributeCenter_dbo_Driver_DriverID" Association="Self.FK_dbo_DistributeCenter_dbo_Driver_DriverID">
+            <End Role="Driver" EntitySet="Driver" />
+            <End Role="DistributeCenter" EntitySet="DistributeCenter" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_DistributeCenter_dbo_Shipment_ShipmentNo" Association="Self.FK_dbo_DistributeCenter_dbo_Shipment_ShipmentNo">
+            <End Role="Shipment" EntitySet="Shipment" />
+            <End Role="DistributeCenter" EntitySet="DistributeCenter" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_DistributeCenter_dbo_User_UserID" Association="Self.FK_dbo_DistributeCenter_dbo_User_UserID">
+            <End Role="User" EntitySet="User" />
+            <End Role="DistributeCenter" EntitySet="DistributeCenter" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_Driver_dbo_Route_RouteID" Association="Self.FK_dbo_Driver_dbo_Route_RouteID">
+            <End Role="Route" EntitySet="Route" />
+            <End Role="Driver" EntitySet="Driver" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_Shipment_dbo_Customer_CustomerID" Association="Self.FK_dbo_Shipment_dbo_Customer_CustomerID">
+            <End Role="Customer" EntitySet="Customer" />
+            <End Role="Shipment" EntitySet="Shipment" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_Status_dbo_Shipment_ShipmentNo" Association="Self.FK_dbo_Status_dbo_Shipment_ShipmentNo">
+            <End Role="Shipment" EntitySet="Shipment" />
+            <End Role="Status" EntitySet="Status" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="SynovaExpressDataModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="C__RefactorLog">
+          <Key>
+            <PropertyRef Name="OperationKey" />
+          </Key>
+          <Property Name="OperationKey" Type="Guid" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Customer">
+          <Key>
+            <PropertyRef Name="CustomerID" />
+          </Key>
+          <Property Name="CustomerID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Address" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Tel" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Shipments" Relationship="Self.FK_dbo_Shipment_dbo_Customer_CustomerID" FromRole="Customer" ToRole="Shipment" />
+        </EntityType>
+        <EntityType Name="DistributeCenter">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="ShipmentID" Type="Int32" Nullable="false" />
+          <Property Name="UserID" Type="Int32" Nullable="false" />
+          <Property Name="DriverID" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Driver" Relationship="Self.FK_dbo_DistributeCenter_dbo_Driver_DriverID" FromRole="DistributeCenter" ToRole="Driver" />
+          <NavigationProperty Name="User" Relationship="Self.FK_dbo_DistributeCenter_dbo_User_UserID" FromRole="DistributeCenter" ToRole="User" />
+          <NavigationProperty Name="Shipment" Relationship="SynovaExpressDataModel.FK_dbo_DistributeCenter_dbo_Shipment_ShipmentID1" FromRole="DistributeCenter" ToRole="Shipment" />
+        </EntityType>
+        <EntityType Name="Driver">
+          <Key>
+            <PropertyRef Name="DriverId" />
+          </Key>
+          <Property Name="DriverId" Type="Int32" Nullable="false" />
+          <Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="telephone" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="RouteID" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="car_id" Type="String" Nullable="false" MaxLength="50" Unicode="true" FixedLength="false" />
+          <NavigationProperty Name="DistributeCenters" Relationship="Self.FK_dbo_DistributeCenter_dbo_Driver_DriverID" FromRole="Driver" ToRole="DistributeCenter" />
+          <NavigationProperty Name="Route" Relationship="Self.FK_dbo_Driver_dbo_Route_RouteID" FromRole="Driver" ToRole="Route" />
+        </EntityType>
+        <EntityType Name="Route">
+          <Key>
+            <PropertyRef Name="name" />
+          </Key>
+          <Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="area" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Drivers" Relationship="Self.FK_dbo_Driver_dbo_Route_RouteID" FromRole="Route" ToRole="Driver" />
+        </EntityType>
+        <EntityType Name="Shipment">
+          <Key>
+            <PropertyRef Name="ShipmentNo" />
+          </Key>
+          <Property Name="ShipmentNo" Type="Int32" Nullable="false" />
+          <Property Name="CustomerID" Type="Int32" Nullable="false" />
+          <Property Name="receiver_name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="receiver_address" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="receiver_zipcode" Type="Int32" Nullable="false" />
+          <Property Name="receiver_tel" Type="Int32" Nullable="false" />
+          <Property Name="quantity" Type="Int32" Nullable="false" />
+          <Property Name="price" Type="Decimal" Precision="9" Scale="2" />
+          <Property Name="shipment_date" Type="DateTime" Precision="0" />
+          <Property Name="booking_date" Type="DateTime" Precision="0" />
+          <Property Name="weight" Type="Int32" />
+          <NavigationProperty Name="Customer" Relationship="Self.FK_dbo_Shipment_dbo_Customer_CustomerID" FromRole="Shipment" ToRole="Customer" />
+          <NavigationProperty Name="DistributeCenters" Relationship="SynovaExpressDataModel.FK_dbo_DistributeCenter_dbo_Shipment_ShipmentID1" FromRole="Shipment" ToRole="DistributeCenter" />
+          <NavigationProperty Name="Status" Relationship="SynovaExpressDataModel.FK_dbo_Status_dbo_Shipment_ShipmentID1" FromRole="Shipment" ToRole="Status" />
+        </EntityType>
+        <EntityType Name="Status">
+          <Key>
+            <PropertyRef Name="StatusId" />
+          </Key>
+          <Property Name="StatusId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="status_name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ShipmentID" Type="Int32" Nullable="false" />
+          <Property Name="time" Type="Time" Precision="7" />
+          <NavigationProperty Name="Shipment" Relationship="SynovaExpressDataModel.FK_dbo_Status_dbo_Shipment_ShipmentID1" FromRole="Status" ToRole="Shipment" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <Property Name="username" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="password" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="tel" Type="Int32" />
+          <NavigationProperty Name="DistributeCenters" Relationship="Self.FK_dbo_DistributeCenter_dbo_User_UserID" FromRole="User" ToRole="DistributeCenter" />
+        </EntityType>
+        <Association Name="FK_dbo_Shipment_dbo_Customer_CustomerID">
+          <End Role="Customer" Type="Self.Customer" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Shipment" Type="Self.Shipment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Customer">
+              <PropertyRef Name="CustomerID" />
+            </Principal>
+            <Dependent Role="Shipment">
+              <PropertyRef Name="CustomerID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_DistributeCenter_dbo_Driver_DriverID">
+          <End Role="Driver" Type="Self.Driver" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="DistributeCenter" Type="Self.DistributeCenter" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Driver">
+              <PropertyRef Name="DriverId" />
+            </Principal>
+            <Dependent Role="DistributeCenter">
+              <PropertyRef Name="DriverID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_DistributeCenter_dbo_User_UserID">
+          <End Role="User" Type="Self.User" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="DistributeCenter" Type="Self.DistributeCenter" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="DistributeCenter">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_Driver_dbo_Route_RouteID">
+          <End Role="Route" Type="Self.Route" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Driver" Type="Self.Driver" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Route">
+              <PropertyRef Name="name" />
+            </Principal>
+            <Dependent Role="Driver">
+              <PropertyRef Name="RouteID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="SynovaExpressDataEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="C__RefactorLog" EntityType="Self.C__RefactorLog" />
+          <EntitySet Name="Customers" EntityType="Self.Customer" />
+          <EntitySet Name="DistributeCenters" EntityType="Self.DistributeCenter" />
+          <EntitySet Name="Drivers" EntityType="Self.Driver" />
+          <EntitySet Name="Routes" EntityType="Self.Route" />
+          <EntitySet Name="Shipments" EntityType="Self.Shipment" />
+          <EntitySet Name="Status" EntityType="Self.Status" />
+          <EntitySet Name="Users" EntityType="Self.User" />
+          <AssociationSet Name="FK_dbo_Shipment_dbo_Customer_CustomerID" Association="Self.FK_dbo_Shipment_dbo_Customer_CustomerID">
+            <End Role="Customer" EntitySet="Customers" />
+            <End Role="Shipment" EntitySet="Shipments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_DistributeCenter_dbo_Driver_DriverID" Association="Self.FK_dbo_DistributeCenter_dbo_Driver_DriverID">
+            <End Role="Driver" EntitySet="Drivers" />
+            <End Role="DistributeCenter" EntitySet="DistributeCenters" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_DistributeCenter_dbo_User_UserID" Association="Self.FK_dbo_DistributeCenter_dbo_User_UserID">
+            <End Role="User" EntitySet="Users" />
+            <End Role="DistributeCenter" EntitySet="DistributeCenters" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_Driver_dbo_Route_RouteID" Association="Self.FK_dbo_Driver_dbo_Route_RouteID">
+            <End Role="Route" EntitySet="Routes" />
+            <End Role="Driver" EntitySet="Drivers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_DistributeCenter_dbo_Shipment_ShipmentID1" Association="SynovaExpressDataModel.FK_dbo_DistributeCenter_dbo_Shipment_ShipmentID1">
+            <End Role="Shipment" EntitySet="Shipments" />
+            <End Role="DistributeCenter" EntitySet="DistributeCenters" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_Status_dbo_Shipment_ShipmentID1" Association="SynovaExpressDataModel.FK_dbo_Status_dbo_Shipment_ShipmentID1">
+            <End Role="Shipment" EntitySet="Shipments" />
+            <End Role="Status" EntitySet="Status" />
+          </AssociationSet>
+        </EntityContainer>
+        <Association Name="FK_dbo_DistributeCenter_dbo_Shipment_ShipmentID1">
+          <End Type="SynovaExpressDataModel.Shipment" Role="Shipment" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="SynovaExpressDataModel.DistributeCenter" Role="DistributeCenter" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Shipment">
+              <PropertyRef Name="ShipmentNo" />
+            </Principal>
+            <Dependent Role="DistributeCenter">
+              <PropertyRef Name="ShipmentID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_Status_dbo_Shipment_ShipmentID1">
+          <End Type="SynovaExpressDataModel.Shipment" Role="Shipment" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="SynovaExpressDataModel.Status" Role="Status" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Shipment">
+              <PropertyRef Name="ShipmentNo" />
+            </Principal>
+            <Dependent Role="Status">
+              <PropertyRef Name="ShipmentID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="SynovaExpressDataModelStoreContainer" CdmEntityContainer="SynovaExpressDataEntities">
+          <EntitySetMapping Name="C__RefactorLog">
+            <EntityTypeMapping TypeName="SynovaExpressDataModel.C__RefactorLog">
+              <MappingFragment StoreEntitySet="__RefactorLog">
+                <ScalarProperty Name="OperationKey" ColumnName="OperationKey" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Customers">
+            <EntityTypeMapping TypeName="SynovaExpressDataModel.Customer">
+              <MappingFragment StoreEntitySet="Customer">
+                <ScalarProperty Name="CustomerID" ColumnName="CustomerID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="Tel" ColumnName="Tel" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DistributeCenters">
+            <EntityTypeMapping TypeName="SynovaExpressDataModel.DistributeCenter">
+              <MappingFragment StoreEntitySet="DistributeCenter">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="ShipmentID" ColumnName="ShipmentID" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="DriverID" ColumnName="DriverID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Drivers">
+            <EntityTypeMapping TypeName="SynovaExpressDataModel.Driver">
+              <MappingFragment StoreEntitySet="Driver">
+                <ScalarProperty Name="car_id" ColumnName="car_id" />
+                <ScalarProperty Name="DriverId" ColumnName="DriverId" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="telephone" ColumnName="telephone" />
+                <ScalarProperty Name="RouteID" ColumnName="RouteID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Routes">
+            <EntityTypeMapping TypeName="SynovaExpressDataModel.Route">
+              <MappingFragment StoreEntitySet="Route">
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="area" ColumnName="area" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Shipments">
+            <EntityTypeMapping TypeName="SynovaExpressDataModel.Shipment">
+              <MappingFragment StoreEntitySet="Shipment">
+                <ScalarProperty Name="ShipmentNo" ColumnName="ShipmentNo" />
+                <ScalarProperty Name="CustomerID" ColumnName="CustomerID" />
+                <ScalarProperty Name="receiver_name" ColumnName="receiver_name" />
+                <ScalarProperty Name="receiver_address" ColumnName="receiver_address" />
+                <ScalarProperty Name="receiver_zipcode" ColumnName="receiver_zipcode" />
+                <ScalarProperty Name="receiver_tel" ColumnName="receiver_tel" />
+                <ScalarProperty Name="quantity" ColumnName="quantity" />
+                <ScalarProperty Name="price" ColumnName="price" />
+                <ScalarProperty Name="shipment_date" ColumnName="shipment_date" />
+                <ScalarProperty Name="booking_date" ColumnName="booking_date" />
+                <ScalarProperty Name="weight" ColumnName="weight" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Status">
+            <EntityTypeMapping TypeName="SynovaExpressDataModel.Status">
+              <MappingFragment StoreEntitySet="Status">
+                <ScalarProperty Name="ShipmentID" ColumnName="ShipmentID" />
+                <ScalarProperty Name="StatusId" ColumnName="StatusId" />
+                <ScalarProperty Name="status_name" ColumnName="status_name" />
+                <ScalarProperty Name="time" ColumnName="time" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Users">
+            <EntityTypeMapping TypeName="SynovaExpressDataModel.User">
+              <MappingFragment StoreEntitySet="User">
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="username" ColumnName="username" />
+                <ScalarProperty Name="password" ColumnName="password" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="tel" ColumnName="tel" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

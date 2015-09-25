@@ -60,7 +60,7 @@
           <Property Name="price" Type="decimal" Precision="9" Scale="2" />
           <Property Name="shipment_date" Type="date" />
           <Property Name="booking_date" Type="date" />
-          <Property Name="weight" Type="int" />
+          <Property Name="weight" Type="decimal" Precision="4" Scale="1" />
         </EntityType>
         <EntityType Name="Status">
           <Key>
